@@ -92,8 +92,9 @@ class opticalPhase(initIsm):
         :param Tr: Optical transmittance [-]
         :return: TOA image in irradiances [mW/m2]
         """
-        # TODO
-        return toa
+        #mirar esto
+        toa2 = toa*Tr*(np.pi/4)*(D/f)**pi
+        return toa2
 
 
     def applySysMtf(self, toa, Hsys):
@@ -115,6 +116,25 @@ class opticalPhase(initIsm):
         :return: TOA image 2D in radiances [mW/m2]
         """
         # TODO
-        return toa
 
+        isrf, isrf_wvs = readIsrf(self.auxdir + self.ismConfig.isrffile, band)
+
+        #initialize the output toa
+        toa = np.zeros( (sgm_toa.shape[0], sgm_toa.shape[1]) )
+
+        #normalize it
+        isrf_n = isrf/np.sum(isrf)
+
+        # double loop for spatial pixel
+        for row in range(sgm_toa.shape[0]): #row
+
+            for colum in range(sgm_toa.shape[1]): #column
+
+                # interpolate this to the frequencies of the ISRF
+                cs = interp1d(sgm_wv, sgm_toa[row, colum, :], fill_value=(0, 0), bounds_error=False)
+                toa_1d_interpolated = cs(isrf_wvs*1000) # units -- 801 possitions
+                toa[row,colum] = np.sum(isrf_n*toa_1d_interpolated)
+
+
+        return toa
 

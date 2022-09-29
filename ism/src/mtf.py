@@ -69,7 +69,8 @@ class mtf:
 
         # Calculate the System MTF
         self.logger.debug("Calculation of the Sysmtem MTF by multiplying the different contributors")
-        Hsys = #TODO
+        Hsys = 0
+
 
         # Plot cuts ACT/ALT of the MTF
         self.plotMtf(Hdiff, Hdefoc, Hwfe, Hdet, Hsmear, Hmotion, Hsys, nlines, ncolumns, fnAct, fnAlt, directory, band)
@@ -91,7 +92,26 @@ class mtf:
         :return fnAct: 1D normalised frequencies 2D ACT (f/(1/w))
         :return fnAlt: 1D normalised frequencies 2D ALT (f/(1/w))
         """
-        #TODO
+        eps = 1e-8
+        fstepAlt = 1 / nlines / w
+        fstepAct = 1 / ncolumns / w
+
+        fAlt = np.arange(-1 / (2 * w), 1 / (2 * w) - eps, fstepAlt)
+        fAct = np.arange(-1 / (2 * w), 1 / (2 * w) - eps, fstepAct)
+
+        fnAlt = fAlt/(1/w)
+        fnAct = fAct/(1/w)
+
+        cut_off_freq = D/(lambd*focal)
+        frAlt = fAlt/cut_off_freq
+        frAct = fAct/cut_off_freq
+
+        [fnAltxx, fnActxx] = np.meshgrid(fnAlt, fnAct,
+                                         indexing='ij')  # Please use ‘ij’ indexing or you will get the transpose
+        fn2D = np.sqrt(fnAltxx * fnAltxx + fnActxx * fnActxx)
+
+        fr2D = fn2D*((1/w)/cut_off_freq)
+
         return fn2D, fr2D, fnAct, fnAlt
 
     def mtfDiffract(self,fr2D):
@@ -101,6 +121,7 @@ class mtf:
         :return: diffraction MTF
         """
         #TODO
+        Hdiff = 2/np.pi*(np.arccos(fr2D)-fr2D*(1-(fr2D)**2)**(1/2))
         return Hdiff
 
 
