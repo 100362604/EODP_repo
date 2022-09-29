@@ -7,7 +7,7 @@ from l1b.src.l1b import l1b
 
 auxdir = '/Users/luciamarssanchez/Documents/EODP_repo/auxiliary'
 indir = '/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_2021/EODP-TS-L1B/input'
-outdir = '/Users/luciamarssanchez/Documents/Earth_Observation/l1b_out'
+outdir = '/Users/luciamarssanchez/Documents/Earth_Observation/lib_out'
 
 # Initialise the ISM
 myL1b = l1b(auxdir, indir, outdir)
