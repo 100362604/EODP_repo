@@ -56,14 +56,18 @@ class l1b(initL1b):
 
     def equalization(self, toa, eq_add, eq_mult):
         """
-        Equlization. Apply an offset and a gain.
+        Equalization. Apply an offset and a gain.
         :param toa: TOA in DN
         :param eq_add: Offset in DN
         :param eq_mult: Gain factor, adimensional
         :return: TOA in DN, equalized
         """
-        #TODO
-        toa_out = 1
+        toa_out = np.zeros(toa.shape)
+
+        for ialt in range(toa.shape[0]):
+
+            toa_out[ialt, :] = (toa[ialt, :] - eq_add)/eq_mult
+
         return toa_out
 
     def restoration(self,toa,gain):
