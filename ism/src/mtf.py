@@ -108,9 +108,13 @@ class mtf:
 
         [fnAltxx, fnActxx] = np.meshgrid(fnAlt, fnAct,
                                          indexing='ij')  # Please use ‘ij’ indexing or you will get the transpose
+
         fn2D = np.sqrt(fnAltxx * fnAltxx + fnActxx * fnActxx)
 
         fr2D = fn2D*((1/w)/cut_off_freq)
+
+        writeMat(self.outdir, "fn2D", fn2D)
+        writeMat(self.outdir, "fn2D", fn2D)
 
         return fn2D, fr2D, fnAct, fnAlt
 
@@ -135,6 +139,8 @@ class mtf:
         :return: Defocus MTF
         """
         #TODO
+        x = math.pi*defocus*fr2D*(1-fr2D)
+        Hdefoc = 2*(j1(x))/x
         return Hdefoc
 
     def mtfWfeAberrations(self, fr2D, lambd, kLF, wLF, kHF, wHF):
@@ -148,7 +154,7 @@ class mtf:
         :param wHF: RMS of high-frequency wavefront errors [m]
         :return: WFE Aberrations MTF
         """
-        #TODO
+        Hwfe = np.exp(-fr2D*(1-fr2D)*(kLF*(wLF/lambd)**2)+kHF*(wHF/lambd)**2)
         return Hwfe
 
     def mtfDetector(self,fn2D):
@@ -157,7 +163,7 @@ class mtf:
         :param fnD: 2D normalised frequencies (f/(1/w))), where w is the pixel width
         :return: detector MTF
         """
-        #TODO
+        Hdet = np.sinc(fn2D)
         return Hdet
 
     def mtfSmearing(self, fnAlt, ncolumns, ksmear):
@@ -168,7 +174,8 @@ class mtf:
         :param ksmear: Amplitude of low-frequency component for the motion smear MTF in ALT [pixels]
         :return: Smearing MTF
         """
-        #TODO
+        Hsmear = np.sinc(ksmear*)
+
         return Hsmear
 
     def mtfMotion(self, fn2D, kmotion):
@@ -200,5 +207,8 @@ class mtf:
         :return: N/A
         """
         #TODO
+
+        # Plot cuts of the MTF ALT
+
 
 
