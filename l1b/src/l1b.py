@@ -62,15 +62,15 @@ class l1b(initL1b):
         :param eq_mult: Gain factor, adimensional
         :return: TOA in DN, equalized
         """
-        toa_out = np.zeros(toa.shape)
+        toa_out_eq = np.zeros(toa.shape)
 
         for ialt in range(toa.shape[0]):
 
-            toa_out[ialt, :] = (toa[ialt, :] - eq_add)/eq_mult
+            toa_out_eq[ialt, :] = (toa[ialt, :] - eq_add)/eq_mult
 
-        return toa_out
+        return toa_out_eq
 
-    def restoration(self,toa,gain):
+    def restoration(self,toa_out_eq,gain):
         """
         Absolute Radiometric Gain - restore back to radiances
         :param toa: TOA in DN
@@ -78,9 +78,10 @@ class l1b(initL1b):
         :return: TOA in radiances [mW/sr/m2]
         """
         #TODO
-        self.logger.debug('Sanity check. TOA in radiances after gain application ' + str(toa[1,-1]) + ' [mW/m2/sr]')
+        toa_out_rest = toa_out_eq * gain
+        self.logger.debug('Sanity check. TOA in radiances after gain application ' + str(toa_out_eq[1,-1]) + ' [mW/m2/sr]')
 
-        return toa
+        return toa_out_rest
 
     def plotL1bToa(self, toa_l1b, outputdir, band):
         #TODO
