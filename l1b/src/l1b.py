@@ -70,7 +70,7 @@ class l1b(initL1b):
 
         return toa_out_eq
 
-    def restoration(self,toa_out_eq,gain):
+    def restoration(self,toa,gain):
         """
         Absolute Radiometric Gain - restore back to radiances
         :param toa: TOA in DN
@@ -78,11 +78,18 @@ class l1b(initL1b):
         :return: TOA in radiances [mW/sr/m2]
         """
         #TODO
-        toa_out_rest = toa_out_eq * gain
-        self.logger.debug('Sanity check. TOA in radiances after gain application ' + str(toa_out_eq[1,-1]) + ' [mW/m2/sr]')
+        toa_out_l1b = toa * gain
+        self.logger.debug('Sanity check. TOA in radiances after gain application ' + str(toa_out_l1b[1,-1]) + ' [mW/m2/sr]')
 
-        return toa_out_rest
+        return toa_out_l1b
 
-    def plotL1bToa(self, toa_l1b, outputdir, band):
-        #TODO
-        a = 1
+    def plotL1bToa(self,toa_out_l1b, outputdir, band):
+
+        plt.rcParams["figure.figsize"] = [10.00, 10.00]
+        plt.rcParams["figure.autolayout"] = True
+
+        im = plt.imshow(toa_out_l1b)
+        plt.colorbar(im)
+        plt.show()
+
+
