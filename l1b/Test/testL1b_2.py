@@ -7,13 +7,11 @@ import matplotlib.pyplot as plt
 directory_restored = '/Users/luciamarssanchez/Documents/Earth_Observation/lib_out'
 toa_restored = readToa(directory_restored, 'l1b_toa_VNIR-0.nc')
 
-directory_ISRF = '/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_2021/EODP-TS-L1B/output'
-toa_ISRF = readToa(directory_ISRF, 'l1b_toa_VNIR-0.nc')
+directory_ISRF = '/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_2021/EODP-TS-L1B/input'
+toa_ISRF = readToa(directory_ISRF, 'ism_toa_isrf_VNIR-0.nc')
 
-print(toa_restored[49,:])
-print(toa_ISRF[49,:])
-
-plt.plot(toa_restored[49,:],toa_ISRF[49,:])
+plt.plot(toa_restored[50,:])
+plt.plot(toa_ISRF[50,:])
 plt.show()
 
 
