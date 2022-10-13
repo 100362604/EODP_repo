@@ -1,3 +1,4 @@
+import scipy.constants
 
 from ism.src.initIsm import initIsm
 import numpy as np
@@ -104,7 +105,11 @@ class detectionPhase(initIsm):
         :param wv: Central wavelength of the band [m]
         :return: Toa in photons
         """
-        #TODO
+        h = scipy.constants.h
+        c = scipy.constants.c
+        E_in = toa*area_pix*tint
+        E_photon = h*c/wv
+        toa_ph = E_in/E_photon
         return toa_ph
 
     def phot2Electr(self, toa, QE):
@@ -114,7 +119,7 @@ class detectionPhase(initIsm):
         :param QE: Quantum efficiency [e-/ph]
         :return: toa in electrons
         """
-        #TODO
+        toae = toa*QE
         return toae
 
     def badDeadPixels(self, toa,bad_pix,dead_pix,bad_pix_red,dead_pix_red):
@@ -127,6 +132,10 @@ class detectionPhase(initIsm):
         :param dead_pix_red: Reduction in the quantum efficiency for the dead pixels [-, over 1]
         :return: toa in e- including bad & dead pixels
         """
+        #step_bad = np.floor(size.toa/number of pixels)
+        #n_pixels =
+        #idx_bad = range(5, toa.shape[1], step_bad)  # Distribute evenly in the CCD
+        #idx_dead = range(0, toa.shape[1], step_dead)
         #TODO
         return toa
 
@@ -152,5 +161,7 @@ class detectionPhase(initIsm):
         :param ds_B_coeff: Empirical parameter of the model 6040 K
         :return: TOA in [e-] with dark signal
         """
-        #TODO
+        norm = np.random.normal(0,1,150)
+        DSNU = np.abs(norm)*kdsnu
+
         return toa

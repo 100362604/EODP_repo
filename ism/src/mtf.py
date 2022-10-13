@@ -174,7 +174,7 @@ class mtf:
         :param ksmear: Amplitude of low-frequency component for the motion smear MTF in ALT [pixels]
         :return: Smearing MTF
         """
-        Hsmear = np.sinc(ksmear*)
+        Hsmear = np.sinc(ksmear)
 
         return Hsmear
 
