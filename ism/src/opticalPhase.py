@@ -92,9 +92,8 @@ class opticalPhase(initIsm):
         :param Tr: Optical transmittance [-]
         :return: TOA image in irradiances [mW/m2]
         """
-        #mirar esto
-        toa2 = toa*Tr*(np.pi/4)*(D/f)**pi
-        return toa2
+        toa = toa*Tr*(np.pi/4)*(D/f)**2
+        return toa
 
 
     def applySysMtf(self, toa, Hsys):
@@ -104,8 +103,11 @@ class opticalPhase(initIsm):
         :param Hsys: System MTF
         :return: TOA image in irradiances [mW/m2]
         """
-        # TODO
-        return toa_ft
+        toa_fft2 = fft2(toa)
+        toa1 = toa_fft2*fftshift(Hsys)
+        toa_ft = ifft2(toa1)
+        toa_image = np.imag(toa_ft)
+        return toa_ft, toa_image
 
     def spectralIntegration(self, sgm_toa, sgm_wv, band):
         """
@@ -115,15 +117,12 @@ class opticalPhase(initIsm):
         :param band: band
         :return: TOA image 2D in radiances [mW/m2]
         """
-        # TODO
-
         isrf, isrf_wvs = readIsrf(self.auxdir + self.ismConfig.isrffile, band)
 
+        #normalize toa
+        isrf_n = isrf/np.sum(isrf)
         #initialize the output toa
         toa = np.zeros((sgm_toa.shape[0], sgm_toa.shape[1]))
-
-        #normalize it
-        isrf_n = isrf/np.sum(isrf)
 
         # double loop for spatial pixel
         for row in range(sgm_toa.shape[0]): #row
