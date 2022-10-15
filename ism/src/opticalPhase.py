@@ -103,8 +103,17 @@ class opticalPhase(initIsm):
         :param Hsys: System MTF
         :return: TOA image in irradiances [mW/m2]
         """
-        toa_fft2 = fft2(toa)
-        toa1 = toa_fft2*fftshift(Hsys)
+        # Do an fft2 of the TOA to convert to the frequency domain: GE=fft2(toa)
+        GE = fft2(toa)
+
+        # Do an fftshift of the system MTF. The system MTF as calculated in the previous section has the “1”
+        # in the centre (see Figure 7-53). The FFT2 of the TOA leave the frequencies with the maximum in the
+        # first position (corresponding to ξ=0), so we need to ‘shift’ the MTF to place the ξ=0 in the
+        # first position instead of the centre: fftshift(Hsys). Multiply the shifted system MTF with the
+        # TOA in the frequency domain:
+        toa1 = GE*fftshift(Hsys)
+
+        #Go back the spatial domain with an ifft2
         toa_ft = ifft2(toa1)
         toa_image = np.imag(toa_ft)
         return toa_ft, toa_image

@@ -93,11 +93,11 @@ class mtf:
         :return fnAlt: 1D normalised frequencies 2D ALT (f/(1/w))
         """
         eps = 1e-8
-        fstepAlt = 1 / nlines / w
-        fstepAct = 1 / ncolumns / w
+        fstepAlt = 1/nlines/w
+        fstepAct = 1/ncolumns/w
 
-        fAlt = np.arange(-1 / (2 * w), 1 / (2 * w) - eps, fstepAlt)
-        fAct = np.arange(-1 / (2 * w), 1 / (2 * w) - eps, fstepAct)
+        fAlt = np.arange(-1/(2*w),1/(2*w)-eps,fstepAlt)
+        fAct = np.arange(-1/(2*w),1/(2*w)-eps,fstepAct)
 
         fnAlt = fAlt/(1/w)
         fnAct = fAct/(1/w)
@@ -106,14 +106,12 @@ class mtf:
         frAlt = fAlt/cut_off_freq
         frAct = fAct/cut_off_freq
 
-        [fnAltxx, fnActxx] = np.meshgrid(fnAlt, fnAct,
-                                         indexing='ij')  # Please use ‘ij’ indexing or you will get the transpose
+        [fnAltxx, fnActxx] = np.meshgrid(fnAlt, fnAct,indexing='ij')  # Please use ‘ij’ indexing or you will get the transpose
 
-        fn2D = np.sqrt(fnAltxx * fnAltxx + fnActxx * fnActxx)
+        fn2D = np.sqrt(fnAltxx*fnAltxx + fnActxx*fnActxx)
 
         fr2D = fn2D*((1/w)/cut_off_freq)
 
-        writeMat(self.outdir, "fn2D", fn2D)
         writeMat(self.outdir, "fn2D", fn2D)
 
         return fn2D, fr2D, fnAct, fnAlt
@@ -124,8 +122,15 @@ class mtf:
         :param fr2D: 2D relative frequencies (f/fc), where fc is the optics cut-off frequency
         :return: diffraction MTF
         """
-        #TODO
-        Hdiff = 2/np.pi*(np.arccos(fr2D)-fr2D*(1-(fr2D)**2)**(1/2))
+        Hdiff = np.zeros((fr2D.shape[0], fr2D[1]))
+
+        for row in range(fr2D.shape[0]):
+            for column in range(fr2D.shape[1]):
+                if fr2D[row, column] < 1:
+                    Hdiff[row, column] = 2/np.pi*(np.arccos(fr2D[row, column])-fr2D[row,column]*np.sqrt(1-(fr2D[row, column]*fr2D[row, column])))
+                else:
+                    Hdiff[row, column] = 0.
+                    
         return Hdiff
 
 
