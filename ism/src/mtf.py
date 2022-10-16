@@ -122,7 +122,7 @@ class mtf:
         :param fr2D: 2D relative frequencies (f/fc), where fc is the optics cut-off frequency
         :return: diffraction MTF
         """
-        Hdiff = np.zeros((fr2D.shape[0], fr2D[1]))
+        Hdiff = np.zeros((fr2D.shape[0], fr2D.shape[1]))
 
         for row in range(fr2D.shape[0]):
             for column in range(fr2D.shape[1]):
@@ -143,9 +143,9 @@ class mtf:
         :param D: Telescope diameter [m]
         :return: Defocus MTF
         """
-        #TODO
-        x = math.pi*defocus*fr2D*(1-fr2D)
-        Hdefoc = 2*(j1(x))/x
+        x = math.pi * defocus * fr2D * (1 - fr2D)
+        Hdefoc = 2 * (j1(x)) / x
+
         return Hdefoc
 
     def mtfWfeAberrations(self, fr2D, lambd, kLF, wLF, kHF, wHF):
@@ -168,7 +168,7 @@ class mtf:
         :param fnD: 2D normalised frequencies (f/(1/w))), where w is the pixel width
         :return: detector MTF
         """
-        Hdet = np.sinc(fn2D)
+        Hdet = np.abs(np.sin(np.pi*fn2D)/(np.pi*fn2D))
         return Hdet
 
     def mtfSmearing(self, fnAlt, ncolumns, ksmear):
@@ -179,7 +179,11 @@ class mtf:
         :param ksmear: Amplitude of low-frequency component for the motion smear MTF in ALT [pixels]
         :return: Smearing MTF
         """
-        Hsmear = np.sinc(ksmear)
+        Hsmear = np.zeros((fnAlt.shape[0],ncolumns))
+        Hsmear_2 = np.sin(np.pi*fnAlt*ksmear)/(np.pi*fnAlt*ksmear)
+
+        for columns in range(ncolumns):
+            Hsmear[:,1] = Hsmear_2
 
         return Hsmear
 
