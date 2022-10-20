@@ -72,6 +72,8 @@ class l1c(initL1c):
                 my_mgrs = str(m.toMGRS(lat[row,column],lon[row,column],True,self.l1cConfig.mgrs_tile_precision))
                 mgrs_tiles.add(my_mgrs)
 
+        mgrs_tiles = list(mgrs_tiles)
+
         return lat_l1c, lon_l1c, toa_l1c
 
     def checkSize(self, lat,toa):
