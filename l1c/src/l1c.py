@@ -62,7 +62,16 @@ class l1c(initL1c):
         :param band: band
         :return: L1C radiances, L1C latitude and longitude in degrees
         '''
-        #TODO
+        tck = bisplrep(lat,lon,toa)
+        m=mgrs.MGRS()
+        my_mgrs = np.zeros((toa.shape[0],toa.shape[1]))
+        mgrs_tiles = set([])
+
+        for row in range(lat.shape[0]):
+            for column in range(lon.shape[1]):
+                my_mgrs = str(m.toMGRS(lat[row,column],lon[row,column],True,self.l1cConfig.mgrs_tile_precision))
+                mgrs_tiles.add(my_mgrs)
+
         return lat_l1c, lon_l1c, toa_l1c
 
     def checkSize(self, lat,toa):
