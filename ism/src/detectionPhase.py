@@ -30,7 +30,7 @@ class detectionPhase(initIsm):
         # Photon to electrons conversion
         # -------------------------------------------------------------------------------
         self.logger.info("EODP-ALG-ISM-2030: Photons to Electrons")
-        toa = self.phot2Electr(toa, self.ismConfig.QE)
+        toa = self.phot2Electr(toa, self.ismConfig.QE,self.ismConfig.FWC)
 
         self.logger.debug("TOA [0,0] " +str(toa[0,0]) + " [e-]")
 
@@ -109,17 +109,21 @@ class detectionPhase(initIsm):
         c = scipy.constants.c
         E_in = toa*area_pix*tint
         E_photon = h*c/wv
-        toa_ph = E_in/E_photon
+        toa_ph = E_in/E_photon/1000
         return toa_ph
 
-    def phot2Electr(self, toa, QE):
+    def phot2Electr(self, toa, QE,FWC):
         """
         Conversion of photons to electrons
         :param toa: input TOA in photons [ph]
         :param QE: Quantum efficiency [e-/ph]
         :return: toa in electrons
         """
-        toae = toa*QE
+        toae = toa * QE
+        for row in range(toae.shape[0]):
+            for column in range(toae.shape[1]):
+                if toae[row,column]>FWC:
+                    toae[row,column] = FWC
         return toae
 
     def badDeadPixels(self, toa,bad_pix,dead_pix,bad_pix_red,dead_pix_red):

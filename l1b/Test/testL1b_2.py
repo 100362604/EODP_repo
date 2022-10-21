@@ -11,8 +11,12 @@ directory_ISRF0 = '/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_
 toa_ISRF0 = readToa(directory_ISRF0, 'ism_toa_isrf_VNIR-0.nc')
 
 plt.figure()
-plt.plot(toa_restored0[50,:])
-plt.plot(toa_ISRF0[50,:])
+plt.plot(toa_restored0[50,:],'r-', label = "Restored Signal",linewidth=1.0)
+plt.plot(toa_ISRF0[50,:],'b-', label = "TOA after ISRF",linewidth=1.0)
+plt.legend()
+#plt.title("")
+plt.xlabel("ACT [-]")
+plt.ylabel("TOA [mW/m2/sr]")
 #plt.show()
 plt.savefig('/Users/luciamarssanchez/Documents/Earth_Observation/Figures/l1b_test2/comparison_VNIR0.eps')
 
@@ -24,8 +28,12 @@ directory_ISRF1 = '/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_
 toa_ISRF1 = readToa(directory_ISRF1, 'ism_toa_isrf_VNIR-1.nc')
 
 plt.figure()
-plt.plot(toa_restored1[50,:])
-plt.plot(toa_ISRF1[50,:])
+plt.plot(toa_restored1[50,:],'r-', label = "Restored Signal",linewidth=1.0)
+plt.plot(toa_ISRF1[50,:],'b-', label = "TOA after ISRF",linewidth=1.0)
+plt.legend()
+#plt.title("")
+plt.xlabel("ACT [-]")
+plt.ylabel("TOA [mW/m2/sr]")
 #plt.show()
 plt.savefig('/Users/luciamarssanchez/Documents/Earth_Observation/Figures/l1b_test2/comparison_VNIR1.eps')
 
@@ -37,8 +45,12 @@ directory_ISRF2 = '/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_
 toa_ISRF2 = readToa(directory_ISRF2, 'ism_toa_isrf_VNIR-2.nc')
 
 plt.figure()
-plt.plot(toa_restored2[50,:])
-plt.plot(toa_ISRF2[50,:])
+plt.plot(toa_restored2[50,:],'r-', label = "Restored Signal",linewidth=1.0)
+plt.plot(toa_ISRF2[50,:],'b-', label = "TOA after ISRF",linewidth=1.0)
+plt.legend()
+#plt.title("")
+plt.xlabel("ACT [-]")
+plt.ylabel("TOA [mW/m2/sr]")
 #plt.show()
 plt.savefig('/Users/luciamarssanchez/Documents/Earth_Observation/Figures/l1b_test2/comparison_VNIR2.eps')
 
@@ -50,7 +62,11 @@ directory_ISRF3 = '/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_
 toa_ISRF3 = readToa(directory_ISRF3, 'ism_toa_isrf_VNIR-3.nc')
 
 plt.figure()
-plt.plot(toa_restored3[50,:])
-plt.plot(toa_ISRF3[50,:])
+plt.plot(toa_restored3[50,:],'r-', label = "Restored Signal",linewidth=1.0)
+plt.plot(toa_ISRF3[50,:],'b-', label = "TOA after ISRF",linewidth=1.0)
+plt.legend()
+#plt.title("")
+plt.xlabel("ACT [-]")
+plt.ylabel("TOA [mW/m2/sr]")
 #plt.show()
 plt.savefig('/Users/luciamarssanchez/Documents/Earth_Observation/Figures/l1b_test2/comparison_VNIR3.eps')

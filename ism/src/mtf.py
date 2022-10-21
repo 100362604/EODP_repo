@@ -130,7 +130,9 @@ class mtf:
                     Hdiff[row, column] = 2/np.pi*(np.arccos(fr2D[row, column])-fr2D[row,column]*np.sqrt(1-(fr2D[row, column]*fr2D[row, column])))
                 else:
                     Hdiff[row, column] = 0.
-                    
+
+        Hdiff = Hdiff
+
         return Hdiff
 
 

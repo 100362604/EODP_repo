@@ -74,6 +74,15 @@ class l1c(initL1c):
 
         mgrs_tiles = list(mgrs_tiles)
 
+        lat_l1c = np.zeros(len(mgrs_tiles))
+        lon_l1c = np.zeros(len(mgrs_tiles))
+        toa_l1c = np.zeros(len(mgrs_tiles))
+
+        for row in range(len(mgrs_tiles)):
+            lat_l1c[row], lon_l1c[row] = m.toLatLon(mgrs_tiles[row])
+
+            toa_l1c[row] = bisplev(lat_l1c[row], lon_l1c[row],tck)
+        #toa_sorted = np.sort(toa_l1c)
         return lat_l1c, lon_l1c, toa_l1c
 
     def checkSize(self, lat,toa):

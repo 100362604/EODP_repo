@@ -116,7 +116,7 @@ class opticalPhase(initIsm):
         #Go back the spatial domain with an ifft2
         toa_ft = ifft2(toa1)
         toa_image = np.imag(toa_ft)
-        return toa_ft, toa_image
+        return toa_ft
 
     def spectralIntegration(self, sgm_toa, sgm_wv, band):
         """
