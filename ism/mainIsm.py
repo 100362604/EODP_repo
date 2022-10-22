@@ -8,6 +8,10 @@ auxdir = '/Users/luciamarssanchez/Documents/EODP_repo/auxiliary'
 indir = '/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_2021/EODP-TS-ISM/input/gradient_alt100_act150' # small scene
 outdir = '/Users/luciamarssanchez/Documents/Earth_Observation/lsm_out'
 
+
+#Clear the File Rad"Irrad
+#file = open('')
+
 # Initialise the ISM
 myIsm = ism(auxdir, indir, outdir)
 myIsm.processModule()
