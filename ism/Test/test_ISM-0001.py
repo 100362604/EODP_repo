@@ -46,3 +46,5 @@ if max(map(max,substraction_optical)) <= tolerance:
     print('Test 1 OPTICAL: PASS')
 else:
     print('Test 1 OPTICAL: FAIL')
+
+

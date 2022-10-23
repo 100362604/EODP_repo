@@ -74,7 +74,6 @@ class mtf:
         # Plot cuts ACT/ALT of the MTF
         self.plotMtf(Hdiff, Hdefoc, Hwfe, Hdet, Hsmear, Hmotion, Hsys, nlines, ncolumns, fnAct, fnAlt, directory, band)
 
-
         return Hsys
 
     def freq2d(self,nlines, ncolumns, D, lambd, focal, w):
@@ -121,16 +120,16 @@ class mtf:
         :param fr2D: 2D relative frequencies (f/fc), where fc is the optics cut-off frequency
         :return: diffraction MTF
         """
-        Hdiff = np.zeros((fr2D.shape[0], fr2D.shape[1]))
+        Hdiff = np.zeros((fr2D.shape[0],fr2D.shape[1]))
 
-        for row in range(fr2D.shape[0]):
-            for column in range(fr2D.shape[1]):
-                if fr2D[row, column] < 1:
-                    Hdiff[row, column] = 2/np.pi*(np.arccos(fr2D[row, column])-fr2D[row,column]*np.sqrt(1-(fr2D[row, column]*fr2D[row, column])))
+        for i in range(fr2D.shape[0]):
+            for j in range(fr2D.shape[1]):
+                if fr2D[i,j] < 1:
+                    Hdiff[i,j] = 2/np.pi*(np.arccos(fr2D[i,j])-fr2D[i,j]*np.sqrt((1-(fr2D[i,j])*fr2D[i,j])))
                 else:
-                    Hdiff[row, column] = 0.
+                    Hdiff[i,j] = 0.
 
-        Hdiff = Hdiff
+        Hdiff=Hdiff
 
         return Hdiff
 
@@ -144,10 +143,9 @@ class mtf:
         :param D: Telescope diameter [m]
         :return: Defocus MTF
         """
-        x = np.pi * defocus * fr2D * (1 - fr2D)
-        J1 = x/2 - ((x**3)/16) + ((x**5)/384) -((x**7)/18432)
+        x = np.pi*defocus*fr2D*(1-fr2D)
+        J1 = x/2 - x*x*x/16 + x*x*x*x*x/384 - x**7/18432
         Hdefoc = 2*J1/x
-
         return Hdefoc
 
     def mtfWfeAberrations(self, fr2D, lambd, kLF, wLF, kHF, wHF):
@@ -161,7 +159,7 @@ class mtf:
         :param wHF: RMS of high-frequency wavefront errors [m]
         :return: WFE Aberrations MTF
         """
-        Hwfe = np.exp((-fr2D*(1-fr2D))*(kLF*(wLF/lambd)**2+kHF*(wHF/lambd)**2))
+        Hwfe = np.exp(-fr2D*(1-fr2D)*(kLF*(wLF*wLF/lambd/lambd)+kHF*(wHF*wHF/lambd/lambd)))
         return Hwfe
 
     def mtfDetector(self,fn2D):
@@ -182,10 +180,9 @@ class mtf:
         :return: Smearing MTF
         """
         Hsmear = np.zeros((fnAlt.shape[0],ncolumns))
-        Hsmear_2 = (np.sin(np.pi*fnAlt*ksmear))/(np.pi*fnAlt*ksmear)
-
-        for columns in range(ncolumns):
-            Hsmear[:,columns] = Hsmear_2
+        hsmear_2 = np.sin(fnAlt*ksmear*np.pi)/(fnAlt*ksmear*np.pi)
+        for ii in range (ncolumns):
+            Hsmear[:,ii] =hsmear_2
 
         return Hsmear
 
@@ -196,7 +193,7 @@ class mtf:
         :param kmotion: Amplitude of high-frequency component for the motion smear MTF in ALT and ACT
         :return: detector MTF
         """
-        Hmotion = np.sin(np.pi*kmotion*fn2D)/(np.pi*kmotion*fn2D)
+        Hmotion = np.sin(fn2D * kmotion * np.pi) / (fn2D * kmotion * np.pi)
         return Hmotion
 
     def plotMtf(self,Hdiff, Hdefoc, Hwfe, Hdet, Hsmear, Hmotion, Hsys, nlines, ncolumns, fnAct, fnAlt, directory, band):
@@ -217,33 +214,30 @@ class mtf:
         :param band: band
         :return: N/A
         """
-        act_half = int(np.floor(fnAct.shape[0]/2))
-        alt_half = int(np.floor(fnAlt.shape[0]/2))
+        halfAct = int(np.floor(fnAct.shape[0]/2))
+        halfAlt = int(np.floor(fnAlt.shape[0]/2))
+        fig, ax = plt.subplots()
+        ax.plot(fnAct[halfAct:], Hdiff[halfAlt,halfAct:], 'r-', label='Diffraction', linewidth=1.0)
+        ax.plot(fnAct[halfAct:], Hdefoc[halfAlt,halfAct:], 'b-', label='Defocusing', linewidth=1.0)
+        ax.plot(fnAct[halfAct:], Hwfe[halfAlt,halfAct:], 'g-', label='Wavefront electronics', linewidth=1.0)
+        ax.plot(fnAct[halfAct:], Hdet[halfAlt,halfAct:], 'y-', label='Detector', linewidth=1.0)
+        ax.plot(fnAct[halfAct:], Hsmear[halfAlt,halfAct:], 'm-', label='Smearing', linewidth=1.0)
+        ax.plot(fnAct[halfAct:], Hmotion[halfAlt,halfAct:], 'c-', label='Motion Blur', linewidth=1.0)
+        ax.plot(fnAct[halfAct:], Hsys[halfAlt,halfAct:], 'k-', label='System', linewidth=1.0)
+        plt.legend(loc='lower left')
+        plt.xlabel('Spatial Frequencies [-]')
+        plt.ylabel('MTF')
+        plt.savefig(self.outdir + '/alt_mtf'+band+'.eps')
 
-        plt.figure()
-        x1 = np.copy(fnAct)
-        plt.plot(x1,Hdiff[act_half,:], 'r-', label="Diffraction MTF", linewidth=1.0)
-        plt.plot(x1,Hdefoc[act_half,:], 'b-', label="Defocusing MTF", linewidth=1.0)
-        plt.plot(x1,Hwfe[act_half,:], 'g-', label="Wavefront electronics MTF", linewidth=1.0)
-        plt.plot(x1,Hdet[act_half,:], 'y-', label="Detector MTF", linewidth=1.0)
-        plt.plot(x1,Hsmear[act_half,:], 'm-', label="Smearing MTF", linewidth=1.0)
-        plt.plot(x1,Hmotion[act_half,:], 'c-', label="Motion blur MTF", linewidth=1.0)
-        plt.plot(x1,Hsys[act_half, :], 'k-', label="System MTF", linewidth=1.0)
-        plt.legend()
-        plt.xlabel("Spatial Frequencies")
-        plt.ylabel("MTF")
-        plt.savefig('/Users/luciamarssanchez/Documents/Earth_Observation/Figures/MTF_plot/plot_MTFs.eps')
-
-        plt.figure()
-        x2 = np.copy(fnAlt)
-        plt.plot(x2,Hdiff[:,alt_half], 'r-', label="Diffraction MTF", linewidth=1.0)
-        plt.plot(x2,Hdefoc[:,alt_half], 'b-', label="Defocusing MTF", linewidth=1.0)
-        plt.plot(x2,Hwfe[:,alt_half], 'g-', label="Wavefront electronics MTF", linewidth=1.0)
-        plt.plot(x2,Hdet[:,alt_half], 'y-', label="Detector MTF", linewidth=1.0)
-        plt.plot(x2,Hsmear[:,alt_half], 'm-', label="Smearing MTF", linewidth=1.0)
-        plt.plot(x2,Hmotion[:,alt_half], 'c-', label="Motion blur MTF", linewidth=1.0)
-        plt.plot(x2,Hsys[:,alt_half], 'k-', label="System MTF", linewidth=1.0)
-        plt.legend()
-        plt.xlabel("Spatial Frequencies")
-        plt.ylabel("MTF")
-        plt.savefig('/Users/luciamarssanchez/Documents/Earth_Observation/Figures/MTF_plot/plot2_MTFs.eps')
+        fig2, ax2 = plt.subplots()
+        plt.xlabel('Spatial Frequencies [-]')
+        plt.ylabel('MTF')
+        ax2.plot(fnAlt[halfAlt:], Hdiff[halfAlt:,halfAct], 'r-', label='Diffraction', linewidth=1.0)
+        ax2.plot(fnAlt[halfAlt:], Hdefoc[halfAlt:,halfAct], 'b-', label='Defocusing', linewidth=1.0)
+        ax2.plot(fnAlt[halfAlt:], Hwfe[halfAlt:,halfAct], 'g-', label='Wavefront electronics', linewidth=1.0)
+        ax2.plot(fnAlt[halfAlt:], Hdet[halfAlt:,halfAct], 'y-', label='Detector', linewidth=1.0)
+        ax2.plot(fnAlt[halfAlt:], Hsmear[halfAlt:,halfAct], 'm-', label='Smearing', linewidth=1.0)
+        ax2.plot(fnAlt[halfAlt:], Hmotion[halfAlt:,halfAct], 'c-', label='Motion', linewidth=1.0)
+        ax2.plot(fnAlt[halfAlt:], Hsys[halfAlt:,halfAct], 'k-', label='System', linewidth=1.0)
+        plt.legend(loc='lower left')
+        plt.savefig(self.outdir + '/act_mtf'+band+'.eps')
