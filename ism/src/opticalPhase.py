@@ -94,15 +94,6 @@ class opticalPhase(initIsm):
         """
         factor = Tr*(np.pi/4)*(D/f)**2
         toa = toa*Tr*(np.pi/4)*(D/f)**2
-
-        if band == 'VNIR-0':
-            file = open('/Users/luciamarssanchez/Documents/Earth_Observation/lsm_out/radiance_to_irradiance.txt','w')
-            file.truncate(0)
-            file.close()
-
-        with open('/Users/luciamarssanchez/Documents/Earth_Observation/lsm_out/radiance_to_irradiance.txt', 'a') as file2:
-            file2.write(band+'\n')
-            file2.write('Radians to irradiance factor ' + '=' + str(factor)+'\n')
             
         return toa
 

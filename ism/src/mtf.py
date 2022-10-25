@@ -241,3 +241,6 @@ class mtf:
         ax2.plot(fnAlt[halfAlt:], Hsys[halfAlt:,halfAct], 'k-', label='System', linewidth=1.0)
         plt.legend(loc='lower left')
         plt.savefig(self.outdir + '/act_mtf'+band+'.eps')
+
+        writeMat(self.outdir,"Hsys",Hsys)
+        writeMat(self.outdir,"Hdet",Hdet)
