@@ -1,4 +1,4 @@
-
+from config.globalConfig import globalConfig
 from ism.src.initIsm import initIsm
 from math import pi
 from ism.src.mtf import mtf
@@ -44,7 +44,7 @@ class opticalPhase(initIsm):
         toa = self.rad2Irrad(toa,
                              self.ismConfig.D,
                              self.ismConfig.f,
-                             self.ismConfig.Tr)
+                             self.ismConfig.Tr,band)
 
         self.logger.debug("TOA [0,0] " +str(toa[0,0]) + " [e-]")
 
@@ -94,8 +94,7 @@ class opticalPhase(initIsm):
         """
         factor = Tr*(np.pi/4)*(D/f)**2
         toa = toa*Tr*(np.pi/4)*(D/f)**2
-        
-        #Clear file Rad2Irrad
+
         if band == 'VNIR-0':
             file = open('/Users/luciamarssanchez/Documents/Earth_Observation/lsm_out/radiance_to_irradiance.txt','w')
             file.truncate(0)

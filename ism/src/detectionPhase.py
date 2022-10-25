@@ -23,7 +23,7 @@ class detectionPhase(initIsm):
         # -------------------------------------------------------------------------------
         self.logger.info("EODP-ALG-ISM-2010: Irradiances to Photons")
         area_pix = self.ismConfig.pix_size * self.ismConfig.pix_size # [m2]
-        toa = self.irrad2Phot(toa, area_pix, self.ismConfig.t_int, self.ismConfig.wv[int(band[-1])])
+        toa = self.irrad2Phot(toa, area_pix, self.ismConfig.t_int, self.ismConfig.wv[int(band[-1])],band)
 
         self.logger.debug("TOA [0,0] " +str(toa[0,0]) + " [ph]")
 
@@ -96,7 +96,7 @@ class detectionPhase(initIsm):
         return toa
 
 
-    def irrad2Phot(self, toa, area_pix, tint, wv):
+    def irrad2Phot(self, toa, area_pix, tint, wv, band):
         """
         Conversion of the input Irradiances to Photons
         :param toa: input TOA in irradiances [mW/m2]
@@ -110,6 +110,17 @@ class detectionPhase(initIsm):
         E_in = toa*area_pix*tint
         E_photon = h*c/wv
         toa_ph = E_in/E_photon/1000
+        factor = toa_ph/toa
+
+        if band == 'VNIR-0':
+            file = open('/Users/luciamarssanchez/Documents/Earth_Observation/lsm_out/irradiance_to_photons.txt','w')
+            file.truncate(0)
+            file.close()
+
+        with open('/Users/luciamarssanchez/Documents/Earth_Observation/lsm_out/irradiance_to_photons.txt', 'a') as file2:
+            file2.write(band+'\n')
+            file2.write('Irradians to photons factor ' + '=' + str(factor)+'\n')
+
         return toa_ph
 
     def phot2Electr(self, toa, QE,FWC):
@@ -150,7 +161,10 @@ class detectionPhase(initIsm):
         :param kprnu: multiplicative factor to the standard normal deviation for the PRNU
         :return: TOA after adding PRNU [e-]
         """
-        #TODO
+        nor = np.random.normal(0.,1.,toa.shape[1])
+
+        for i in range(toa.shape[1]):
+            toa[:,i] = toa[:,i]*(1+nor[i]*kprnu)
         return toa
 
 
@@ -165,7 +179,10 @@ class detectionPhase(initIsm):
         :param ds_B_coeff: Empirical parameter of the model 6040 K
         :return: TOA in [e-] with dark signal
         """
-        norm = np.random.normal(0,1,150)
-        DSNU = np.abs(norm)*kdsnu
+        sd = ds_A_coeff * (T/Tref)**3*np.exp(-ds_B_coeff*(1/T-1/Tref))
+        ds = sd*(1 + np.abs(np.random.normal(0,1,toa.shape[1])*kdsnu))
+
+        for i in range(toa.shape[1]):
+            toa[:,i] = toa[:,i]  + ds[i]
 
         return toa
