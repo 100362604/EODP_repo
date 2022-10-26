@@ -74,7 +74,7 @@ class detectionPhase(initIsm):
                                self.ismConfig.bad_pix,
                                self.ismConfig.dead_pix,
                                self.ismConfig.bad_pix_red,
-                               self.ismConfig.dead_pix_red)
+                               self.ismConfig.dead_pix_red,band)
 
 
         # Write output TOA
@@ -137,7 +137,7 @@ class detectionPhase(initIsm):
                     toae[row,column] = FWC
         return toae
 
-    def badDeadPixels(self, toa,bad_pix,dead_pix,bad_pix_red,dead_pix_red):
+    def badDeadPixels(self,toa,bad_pix,dead_pix,bad_pix_red,dead_pix_red, band):
         """
         Bad and dead pixels simulation
         :param toa: input toa in [e-]
@@ -147,11 +147,31 @@ class detectionPhase(initIsm):
         :param dead_pix_red: Reduction in the quantum efficiency for the dead pixels [-, over 1]
         :return: toa in e- including bad & dead pixels
         """
-        #step_bad = np.floor(size.toa/number of pixels)
-        #n_pixels =
-        #idx_bad = range(5, toa.shape[1], step_bad)  # Distribute evenly in the CCD
-        #idx_dead = range(0, toa.shape[1], step_dead)
-        #TODO
+        size_toa_act = toa.shape[1]
+
+        dead_pixels_total = int(dead_pix/100*size_toa_act)
+        bad_pixels_total = int(bad_pix/100*size_toa_act)
+
+        ## BAD PIXELS
+        if bad_pixels_total == 0:
+            print('No bad pixels index')
+        else:
+            step_bad = int(size_toa_act/bad_pixels_total)
+            idx_bad = np.arange(5, size_toa_act, step_bad)  # Distribute evenly in the CCD
+
+            for index in range(idx_bad.shape[0]):
+                toa[:,idx_bad[index]] = toa[:,idx_bad[index]] * (1-bad_pix_red)
+
+        ## DEAD PIXELS
+        if dead_pixels_total == 0:
+            print('No dead pixels index')
+        else:
+            step_dead = int(size_toa_act/dead_pixels_total)
+            idx_dead = np.arange(0,size_toa_act,step_dead)
+
+            for index in range(idx_dead.shape[0]):
+                toa[:,idx_dead[index]] = toa[:,idx_dead[index]] * (1-dead_pix_red)
+
         return toa
 
     def prnu(self, toa, kprnu):
