@@ -93,4 +93,7 @@ class l1c(initL1c):
         :param toa: Radiance 2D matrix
         :return: NA
         '''
-        #TODO
+
+    if lat.shape[0] != toa.shape[0] or lat.shape[1] != toa.shape[1]:
+        print('Sizes are different!')
+

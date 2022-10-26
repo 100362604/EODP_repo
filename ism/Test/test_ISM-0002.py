@@ -23,11 +23,6 @@ for i in range(len(file_detection)):
             substraction_detection[ii,jj] = toa_mine_detection[ii,jj] - toa_ls_detection[ii,jj]
 
 
-if max(map(max,substraction_detection)) <= tolerance:
-    print('Test Detection: PASS')
-else:
-    print('Test Detection: FAIL')
-
 
 ##### Ds
 file_ds = ['ism_toa_ds_VNIR-0.nc','ism_toa_ds_VNIR-1.nc','ism_toa_ds_VNIR-2.nc','ism_toa_ds_VNIR-3.nc']
@@ -42,12 +37,6 @@ for i in range(len(file_ds)):
     for ii in range(toa_mine_ds.shape[0]):
         for jj in range(toa_mine_ds.shape[1]):
             substraction_ds[ii,jj] = toa_mine_ds[ii,jj] - toa_ls_ds[ii,jj]
-
-
-if max(map(max,substraction_ds)) <= tolerance:
-    print('Test Ds: PASS')
-else:
-    print('Test Ds: FAIL')
 
 
 ##### e
@@ -66,13 +55,6 @@ for i in range(len(file_detection)):
             substraction_e[ii,jj] = toa_mine_e[ii,jj] - toa_ls_e[ii,jj]
 
 
-if max(map(max,substraction_e)) <= tolerance:
-    print('Test e: PASS')
-else:
-    print('Test e: FAIL')
-
-print(max(map(max,substraction_e)))
-
 #### PRNU
 
 file_PRNU = ['ism_toa_PRNU_VNIR-0.nc','ism_toa_PRNU_VNIR-1.nc','ism_toa_PRNU_VNIR-2.nc','ism_toa_PRNU_VNIR-3.nc']
@@ -87,6 +69,27 @@ for i in range(len(file_PRNU)):
     for ii in range(toa_mine_PRNU.shape[0]):
         for jj in range(toa_mine_PRNU.shape[1]):
             substraction_PRNU[ii,jj] = toa_mine_PRNU[ii,jj] - toa_ls_PRNU[ii,jj]
+
+
+
+## Results
+
+if max(map(max,substraction_detection)) <= tolerance:
+    print('Test Detection: PASS')
+else:
+    print('Test Detection: FAIL')
+
+
+if max(map(max,substraction_ds)) <= tolerance:
+    print('Test Ds: PASS')
+else:
+    print('Test Ds: FAIL')
+
+
+if max(map(max,substraction_e)) <= tolerance:
+    print('Test e: PASS')
+else:
+    print('Test e: FAIL')
 
 
 if max(map(max,substraction_PRNU)) <= tolerance:
