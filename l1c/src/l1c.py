@@ -84,7 +84,7 @@ class l1c(initL1c):
             toa_l1c[row] = bisplev(lat_l1c[row], lon_l1c[row],tck)
 
         toa_sorted = np.sort(toa_l1c)
-        
+
         return lat_l1c, lon_l1c, toa_l1c
 
     def checkSize(self, lat ,toa):
