@@ -82,10 +82,12 @@ class l1c(initL1c):
             lat_l1c[row], lon_l1c[row] = m.toLatLon(mgrs_tiles[row])
 
             toa_l1c[row] = bisplev(lat_l1c[row], lon_l1c[row],tck)
-        #toa_sorted = np.sort(toa_l1c)
+
+        toa_sorted = np.sort(toa_l1c)
+        
         return lat_l1c, lon_l1c, toa_l1c
 
-    def checkSize(self, lat,toa):
+    def checkSize(self, lat ,toa):
         '''
         Check the sizes of the input radiances and geodetic coordinates.
         If they don't match, exit.
@@ -94,6 +96,6 @@ class l1c(initL1c):
         :return: NA
         '''
 
-    if lat.shape[0] != toa.shape[0] or lat.shape[1] != toa.shape[1]:
-        print('Sizes are different!')
+        if lat.shape[0] != toa.shape[0] or lat.shape[1] != toa.shape[1]:
+            print('Sizes are different!')
 
