@@ -9,6 +9,8 @@ auxdir = '/Users/luciamarssanchez/Documents/EODP_repo/auxiliary'
 indir = '/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_2021/EODP-TS-L1C/input/gm_alt100_act_150/,/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_2021/EODP-TS-L1C/input/l1b_output'
 outdir = '/Users/luciamarssanchez/Documents/Earth_Observation/l1c_out'
 
+
 # Initialise the ISM
 myL1c = l1c(auxdir, indir, outdir)
 myL1c.processModule()
+
