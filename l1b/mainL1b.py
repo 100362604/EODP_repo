@@ -6,11 +6,11 @@ from l1b.src.l1b import l1b
 # Directory - this is the common directory for the execution of the E2E, all modules
 
 auxdir = '/Users/luciamarssanchez/Documents/EODP_repo/auxiliary'
-#indir = '/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_2021/EODP-TS-L1B/input'
-#outdir = '/Users/luciamarssanchez/Documents/Earth_Observation/lib_out'
+indir = '/Users/luciamarssanchez/Documents/Earth_Observation/EODP_TER_2021/EODP-TS-L1B/input'
+outdir = '/Users/luciamarssanchez/Documents/Earth_Observation/lib_out'
 #outdir = '/Users/luciamarssanchez/Documents/Earth_Observation/lib_out_eq_false'
-indir = '/Users/luciamarssanchez/Documents/Earth_Observation/lsm_out_touluse'
-outdir = '/Users/luciamarssanchez/Documents/Earth_Observation/l1b_out_touluse'
+#indir = '/Users/luciamarssanchez/Documents/Earth_Observation/lsm_out_touluse'
+#outdir = '/Users/luciamarssanchez/Documents/Earth_Observation/l1b_out_touluse'
 
 # Initialise the ISM
 myL1b = l1b(auxdir, indir, outdir)
