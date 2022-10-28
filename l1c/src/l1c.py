@@ -99,6 +99,7 @@ class l1c(initL1c):
         if lat.shape[0] != toa.shape[0] or lat.shape[1] != toa.shape[1]:
             print('Sizes are different!')
 
+
     def plotL1cToa(self, lat_l1c, lon_l1c, toa_l1c, band):
         jet = cm.get_cmap('jet', len(lat_l1c))
         toa_l1c[np.argwhere(toa_l1c < 0)] = 0

@@ -17,7 +17,7 @@ class videoChainPhase(initIsm):
         self.logger.info("EODP-ALG-ISM-3010: Electrons to Voltage – Read-out and Amplification")
         toa = self.electr2Volt(toa,
                          self.ismConfig.OCF,
-                         self.ismConfig.ADC_gain)
+                         self.ismConfig.ADC_gain,band)
 
         self.logger.debug("TOA [0,0] " +str(toa[0,0]) + " [V]")
 
@@ -27,7 +27,7 @@ class videoChainPhase(initIsm):
         toa = self.digitisation(toa,
                           self.ismConfig.bit_depth,
                           self.ismConfig.min_voltage,
-                          self.ismConfig.max_voltage)
+                          self.ismConfig.max_voltage,band)
 
         self.logger.debug("TOA [0,0] " +str(toa[0,0]) + " [DN]")
 
@@ -45,7 +45,7 @@ class videoChainPhase(initIsm):
 
         return toa
 
-    def electr2Volt(self, toa, OCF, gain_adc):
+    def electr2Volt(self, toa, OCF, gain_adc,band):
         """
         Electron to Volts conversion.
         Simulates the read-out and the amplification
@@ -56,9 +56,11 @@ class videoChainPhase(initIsm):
         :return: output toa in [V]
         """
         toa = OCF*gain_adc*toa
+        electrtoVolts = OCF * gain_adc
+
         return toa
 
-    def digitisation(self, toa, bit_depth, min_voltage, max_voltage):
+    def digitisation(self, toa, bit_depth, min_voltage, max_voltage,band):
         """
         Digitisation - conversion from Volts to Digital counts
         :param toa: input toa in [V]
@@ -68,5 +70,7 @@ class videoChainPhase(initIsm):
         :return: toa in digital counts
         """
         toa_dn = np.round(((toa/(max_voltage-min_voltage))*(2**bit_depth-1)))
+        digitisation = toa / toa_dn
+
         return toa_dn
 

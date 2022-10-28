@@ -30,7 +30,7 @@ class detectionPhase(initIsm):
         # Photon to electrons conversion
         # -------------------------------------------------------------------------------
         self.logger.info("EODP-ALG-ISM-2030: Photons to Electrons")
-        toa = self.phot2Electr(toa, self.ismConfig.QE,self.ismConfig.FWC)
+        toa = self.phot2Electr(toa, self.ismConfig.QE,self.ismConfig.FWC,band)
 
         self.logger.debug("TOA [0,0] " +str(toa[0,0]) + " [e-]")
 
@@ -112,18 +112,9 @@ class detectionPhase(initIsm):
         toa_ph = E_in/E_photon/1000
         factor = toa_ph/toa
 
-        if band == 'VNIR-0':
-            file = open('/Users/luciamarssanchez/Documents/Earth_Observation/lsm_out/irradiance_to_photons.txt','w')
-            file.truncate(0)
-            file.close()
-
-        with open('/Users/luciamarssanchez/Documents/Earth_Observation/lsm_out/irradiance_to_photons.txt', 'a') as file2:
-            file2.write(band+'\n')
-            file2.write('Irradians to photons factor ' + '=' + str(factor)+'\n')
-
         return toa_ph
 
-    def phot2Electr(self, toa, QE,FWC):
+    def phot2Electr(self, toa, QE,FWC,band):
         """
         Conversion of photons to electrons
         :param toa: input TOA in photons [ph]
@@ -131,10 +122,14 @@ class detectionPhase(initIsm):
         :return: toa in electrons
         """
         toae = toa * QE
+        a = 0
         for row in range(toae.shape[0]):
             for column in range(toae.shape[1]):
                 if toae[row,column]>FWC:
                     toae[row,column] = FWC
+                    a +=1
+
+        saturated = a/toae.shape[0]/toae.shape[1]*100
         return toae
 
     def badDeadPixels(self,toa,bad_pix,dead_pix,bad_pix_red,dead_pix_red, band):

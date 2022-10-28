@@ -23,8 +23,8 @@ for i in range(len(file)):
     substraction = toa_mine_sorted - toa_ls_sorted
 
 if max(substraction) <= tolerance:
-    print('Test L1B: PASS')
+    print('Test L1C: PASS')
 else:
-    print('Test L1B: FAIL')
+    print('Test L1C: FAIL')
 
 print(max(substraction))
